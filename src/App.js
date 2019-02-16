@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 import './App.css';
 import ReactChartkick, { ColumnChart } from 'react-chartkick'
 import Chart from 'chart.js'
+import config from './utils/config'
 ReactChartkick.addAdapter(Chart)
 
 const  S3 = require('aws-sdk/clients/s3');
 const client = new S3({
-  region: 'us-east-1',
-  secretAccessKey: process.env.SECRET_ACCESS_KEY,
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  sessionToken: process.env.SESSION_TOKEN
+  region: config.region,
+  secretAccessKey: config.accessKey,
+  accessKeyId: config.keyId,
+  sessionToken: config.session
 });
 
 const params = {
-	Bucket: 'juslecsv',
+	Bucket: config.bucket,
 	Key: 'API_SP.POP.TOTL_DS2_en_csv_v2_10473719.csv',
 	ExpressionType: 'SQL',
 	Expression: 'select s._1, s._62 from s3object s limit 19',
@@ -65,11 +66,12 @@ class App extends Component {
       this.setState({selectData: string})
     });
   }
+
   jsonify(data) {
     let set = data.split('\n')
     // console.log(set)
-    const json={
-    }
+    const json={}
+
     for (let i = 5; i < set.length; i++) {
       // console.log(set[i].split(',')[0])
       if (set[i].split(',')[0] !== 'Arab World')
